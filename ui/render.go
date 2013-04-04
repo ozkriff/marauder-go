@@ -1,7 +1,5 @@
 // See LICENSE file for copyright and license details.
 
-// Package render реализует отрисовку всего происходящего
-
 package ui
 
 import (
@@ -15,7 +13,10 @@ type ScreenPos struct {
 	Y int
 }
 
-// Render, вы не поверите, рисует
+// Render, вы не поверите, рисует!
+//
+// Render typr реализует отрисовку всего происходящего
+//
 type Render struct {
 	// ядро - всему голова
 	Core *game.Core

@@ -1,10 +1,5 @@
 // See LICENSE file for copyright and license details.
 
-// Package dir provides hexagonal directions.
-//
-// Модуль direction реализует работу с направлениями 
-// в гексагональной сетке.
-//
 package game
 
 import (
@@ -12,6 +7,11 @@ import (
 	"log"
 )
 
+// Dir type provides hexagonal directions.
+//
+// Модуль direction реализует работу с направлениями
+// в гексагональной сетке.
+//
 // Dir обозначает некоторое направления.
 // Например, движение в определенную сторону
 // или направление взгляда юнита.

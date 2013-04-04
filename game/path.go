@@ -1,7 +1,5 @@
 // See LICENSE file for copyright and license details.
 
-// Package path реализует путенахождение
-//
 package game
 
 import (

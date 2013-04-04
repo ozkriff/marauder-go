@@ -1,5 +1,5 @@
 // See LICENSE file for copyright and license details.
 
-// Package ui implements user interface.
+// Package game implements game logic.
 //
-package ui
+package game

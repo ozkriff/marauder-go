@@ -1,8 +1,8 @@
 // See LICENSE file for copyright and license details.
 
-// Package pos - позиция на карте.
 package game
 
+// Pos type - позиция на карте.
 type Pos struct {
 	X int
 	Y int
