@@ -11,10 +11,7 @@ import (
 // TODO: remove print funcs from here!
 // ----------------------------------------------------
 
-func PrintForEachTile(
-	m Gameboard,
-	f func(*Tile),
-) {
+func PrintForEachTile(m Gameboard, f func(*Tile)) {
 	for y := range m.Tiles {
 		if y%2 == 0 {
 			fmt.Printf("  ")
