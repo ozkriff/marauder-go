@@ -6,8 +6,8 @@ package main
 
 import (
 	"fmt"
-	"my/marauder/game"
-	userInterface "my/marauder/ui"
+	"github.com/ozkriff/marauder/game"
+	userInterface "github.com/ozkriff/marauder/ui"
 )
 
 func setSomeUnwalkableTiles(m *game.Gameboard) {
@@ -37,7 +37,7 @@ func main() {
 	mapSize := game.Pos{X: 10, Y: 20}
 	board := game.NewGameboard(mapSize)
 	setSomeUnwalkableTiles(board)
-	if false {
+	if true {
 		// тест путенахождения
 		game.Fill(board, game.Pos{X: 1, Y: 2})
 		game.PrintMapIsWalkable(*board)

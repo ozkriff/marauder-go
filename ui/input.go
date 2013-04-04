@@ -7,7 +7,7 @@ package ui
 import (
 	"github.com/banthar/Go-SDL/sdl"
 	// "github.com/0xe2-0x9a-0x9b/Go-SDL/sdl" // ?
-	"my/marauder/game"
+	"github.com/ozkriff/marauder/game"
 )
 
 // InputHandler обрабатывает ввод пользователя и всякие

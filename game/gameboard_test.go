@@ -4,7 +4,7 @@ package game_test
 
 import (
 	"testing"
-	"my/marauder/game"
+	"github.com/ozkriff/marauder/game"
 )
 
 func TestIsInboard(t *testing.T) {

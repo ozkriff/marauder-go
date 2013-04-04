@@ -6,7 +6,7 @@ package ui
 
 import (
 	"github.com/banthar/Go-SDL/sdl"
-	"my/marauder/game"
+	"github.com/ozkriff/marauder/game"
 )
 
 // Некоторая позиция в пикселях относительно левого верхнего края окна.

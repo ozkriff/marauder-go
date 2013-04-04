@@ -4,7 +4,7 @@ package ui
 
 import (
 	"github.com/banthar/Go-SDL/sdl"
-	"my/marauder/game"
+	"github.com/ozkriff/marauder/game"
 )
 
 // UserInterface позволяет рисовать происходящее в игре

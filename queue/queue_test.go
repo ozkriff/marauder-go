@@ -3,7 +3,7 @@
 package queue_test
 
 import (
-	"my/marauder/queue"
+	"github.com/ozkriff/marauder/queue"
 	"testing"
 )
 
