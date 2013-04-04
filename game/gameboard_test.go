@@ -3,8 +3,8 @@
 package game_test
 
 import (
-	"testing"
 	"github.com/ozkriff/marauder/game"
+	"testing"
 )
 
 func TestIsInboard(t *testing.T) {

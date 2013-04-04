@@ -6,8 +6,8 @@ package game
 
 import (
 	"fmt"
-	"log"
 	"github.com/ozkriff/marauder/queue"
+	"log"
 )
 
 // TODO: remove print funcs from here!
