@@ -1,5 +1,7 @@
 // See LICENSE file for copyright and license details.
 
+// Package dir provides hexagonal directions.
+//
 // Модуль direction реализует работу с направлениями 
 // в гексагональной сетке.
 //
@@ -50,7 +52,7 @@ var dirToPosDiff = [2][6]pos.Pos{
 	},
 }
 
-// Diff возвращает разницу ("угол") между индексами направлений.
+// Diff returns difference between this and some other direction.
 func (self Dir) Diff(other Dir) int {
 	d := self - other
 	if d < 0 {
@@ -62,7 +64,7 @@ func (self Dir) Diff(other Dir) int {
 	return int(d)
 }
 
-// Opposite возвращает противоположное направление.
+// Opposite return opposite direction.
 func (self Dir) Opposite() Dir {
 	directionIndex := self + 6/2
 	if directionIndex >= 6 {
