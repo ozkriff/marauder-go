@@ -55,25 +55,21 @@ func PrintPath(m Gameboard) {
 
 // ----------------------------------------------------
 
-var pathQueue = queue.Queue{}
+type Pathfinder struct {
+	q     queue.Queue
+	Board *Gameboard
+}
 
 // If this is first(start) tile - no parent tile
-func getParentDir(
-	m *Gameboard,
-	u *Unit,
-	p Pos) Dir {
-
-	tile := m.Tile(p)
+func (self *Pathfinder) getParentDir(u *Unit, p Pos) Dir {
+	tile := self.Board.Tile(p)
 	if tile.Cost == 0 {
 		return u.Dir
 	}
 	return tile.Parent.Opposite()
 }
 
-func getTileCost(
-	originalPos Pos,
-	neighbourPos Pos) int {
-
+func getTileCost(originalPos Pos, neighbourPos Pos) int {
 	// int diff = Dir(t, nb).diff(getParentDir(u, t))
 	// int maxAP = u.type().actionPoints - 1
 	// int additionalCost[] = {3, 4, maxAP, maxAP}
@@ -83,13 +79,12 @@ func getTileCost(
 	return 1 // TODO: convert full version from C++
 }
 
-func processNeighbourPos(
-	m *Gameboard,
+func (self *Pathfinder) processNeighbourPos(
 	originalPos Pos,
 	neighbourPos Pos,
 ) {
-	t1 := m.Tile(originalPos)
-	t2 := m.Tile(neighbourPos)
+	t1 := self.Board.Tile(originalPos)
+	t2 := self.Board.Tile(neighbourPos)
 
 	// if (mCore.isUnitAt(neighbourPos) || t2.obstacle) {
 	if !t2.IsWalkable {
@@ -101,7 +96,7 @@ func processNeighbourPos(
 	// int ap = u.actionPoints()
 
 	if t2.Cost > newcost /* && newcost <= ap */ {
-		pathQueue.Push(neighbourPos)
+		self.q.Push(neighbourPos)
 
 		// update neighbour tile info
 		t2.Cost = newcost
@@ -115,25 +110,21 @@ func processNeighbourPos(
 	}
 }
 
-func tryToPushNeighbours(
-	m *Gameboard,
-	// const Unit& u,
-	p Pos,
-) {
-	if !m.IsInboard(p) {
+func (self *Pathfinder) tryToPushNeighbours(p Pos) {
+	if !self.Board.IsInboard(p) {
 		log.Fatalf("p(%#v) isn't inboard", p)
 	}
 	for i := 0; i < 6; i++ {
 		neighbourPos := GetNeighbourPos(p, Dir(i))
-		if m.IsInboard(neighbourPos) {
-			processNeighbourPos(m, p, neighbourPos)
+		if self.Board.IsInboard(neighbourPos) {
+			self.processNeighbourPos(p, neighbourPos)
 		}
 	}
 }
 
-func cleanMap(m *Gameboard) {
-	m.ForEachTilePos(func(p Pos) {
-		m.Tile(p).Cost = 200
+func (self *Pathfinder) cleanMap() {
+	self.Board.ForEachTilePos(func(p Pos) {
+		self.Board.Tile(p).Cost = 200
 	})
 }
 
@@ -141,31 +132,30 @@ func cleanMap(m *Gameboard) {
 //
 // Т.е. заполняет поле Cost в клетках.
 //
-func Fill(m *Gameboard, startPos Pos) {
-	if !pathQueue.IsEmpty() {
+func (self *Pathfinder) Fill(startPos Pos) {
+	if !self.q.IsEmpty() {
 		log.Fatal("queue is not empty\n")
 	}
 
-	cleanMap(m)
+	self.cleanMap()
 
 	// Push start position
-	pathQueue.Push(startPos)
+	self.q.Push(startPos)
 
-	tile := m.Tile(startPos)
+	tile := self.Board.Tile(startPos)
 	tile.Cost = 0
 	// TODO: t.parent = DirID::NONE
 	tile.Parent = 0
 	// TODO: ... t.dir = u.dir()
 
-	for !pathQueue.IsEmpty() {
-		// fmt.Printf("len: %d\n", pathQueue.Len())
-		p := pathQueue.Pop().(Pos)
-		tryToPushNeighbours(m, p)
+	for !self.q.IsEmpty() {
+		p := self.q.Pop().(Pos)
+		self.tryToPushNeighbours(p)
 	}
 }
 
-func GetPath(m *Gameboard, target Pos) []Pos {
-	if !m.IsInboard(target) {
+func (self *Pathfinder) GetPath(target Pos) []Pos {
+	if !self.Board.IsInboard(target) {
 		log.Fatalf("bad target position %#v", target)
 	}
 
@@ -174,19 +164,19 @@ func GetPath(m *Gameboard, target Pos) []Pos {
 	// std::vector<V2i> path;
 	path := make([]Pos, 0)
 
-	for m.Tile(p).Cost != 0 {
+	for self.Board.Tile(p).Cost != 0 {
 		path = append(path, p) // path.push_back(p);
-		p = GetNeighbourPos(p, m.Tile(p).Parent)
-		if !m.IsInboard(p) {
+		p = GetNeighbourPos(p, self.Board.Tile(p).Parent)
+		if !self.Board.IsInboard(p) {
 			log.Fatalf("bad position %#v", p)
 		}
-		m.Tile(p).Visited = true
+		self.Board.Tile(p).Visited = true
 	}
 
 	// Add start position
 	path = append(path, p)
 
-	m.Tile(p).Visited = true
+	self.Board.Tile(p).Visited = true
 
 	// reverse list
 	// std::reverse(path.begin(), path.end());

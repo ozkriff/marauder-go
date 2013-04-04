@@ -39,10 +39,13 @@ func main() {
 	setSomeUnwalkableTiles(board)
 	if true {
 		// тест путенахождения
-		game.Fill(board, game.Pos{X: 1, Y: 2})
+		pathfinder := game.Pathfinder{
+			Board: board,
+		}
+		pathfinder.Fill(game.Pos{X: 1, Y: 2})
 		game.PrintMapIsWalkable(*board)
 		game.PrintMapCost(*board)
-		p := game.GetPath(board, game.Pos{X: 9, Y: 9})
+		p := pathfinder.GetPath(game.Pos{X: 9, Y: 9})
 		fmt.Printf("%v\n", p)
 		game.PrintPath(*board)
 	} else {
