@@ -7,7 +7,7 @@ package main
 import (
 	"fmt"
 	"github.com/ozkriff/marauder/game"
-	userInterface "github.com/ozkriff/marauder/ui"
+	"github.com/ozkriff/marauder/ui"
 )
 
 func setSomeUnwalkableTiles(m *game.Gameboard) {
@@ -51,8 +51,8 @@ func main() {
 	} else {
 		// нормальная игра
 		core := game.NewCore(board)
-		ui := userInterface.NewUserInterface(core)
-		ui.Run()
-		ui.Close()
+		userInterface := ui.NewUserInterface(core)
+		userInterface.Run()
+		userInterface.Close()
 	}
 }
