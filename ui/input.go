@@ -1,19 +1,20 @@
 // See LICENSE file for copyright and license details.
 
-package input
+// package input реализует обработку ввода от пользователя
+
+package ui
 
 import (
 	"github.com/banthar/Go-SDL/sdl"
 	// "github.com/0xe2-0x9a-0x9b/Go-SDL/sdl" // ?
-	"my/marauder/core"
-	"my/marauder/render"
+	"my/marauder/game"
 )
 
 // InputHandler обрабатывает ввод пользователя и всякие
 // менее важные события, навроде изменения размера окна
 type InputHandler struct {
-	render *render.Render
-	core   *core.Core
+	render *Render
+	core   *game.Core
 }
 
 func (self *InputHandler) processSDLResizeEvent(event *sdl.ResizeEvent) {
@@ -40,7 +41,7 @@ func (self *InputHandler) processSDLKeyboardEvent(event *sdl.KeyboardEvent) {
 }
 
 func (self *InputHandler) processSDLMouseMotionEvent(event *sdl.MouseMotionEvent) {
-	self.render.MousePos = render.ScreenPos{
+	self.render.MousePos = ScreenPos{
 		X: int(event.X),
 		Y: int(event.Y),
 	}
@@ -83,7 +84,7 @@ func (self *InputHandler) ProcessSDLEvents() {
 }
 
 // New создает новый экземпляр InputHandler'а
-func New(render *render.Render, core *core.Core) *InputHandler {
+func NewInputHandler(render *Render, core *game.Core) *InputHandler {
 	self := InputHandler{
 		render: render,
 		core:   core,

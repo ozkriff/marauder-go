@@ -1,11 +1,12 @@
 // See LICENSE file for copyright and license details.
 
-package render
+// Package render реализует отрисовку всего происходящего
+
+package ui
 
 import (
 	"github.com/banthar/Go-SDL/sdl"
-	"my/marauder/core"
-	"my/marauder/pos"
+	"my/marauder/game"
 )
 
 // Некоторая позиция в пикселях относительно левого верхнего края окна.
@@ -17,7 +18,7 @@ type ScreenPos struct {
 // Render, вы не поверите, рисует
 type Render struct {
 	// ядро - всему голова
-	Core *core.Core
+	Core *game.Core
 
 	// сдвиг левого верхнего края карты
 	// относительно левого верхнего края окна
@@ -37,10 +38,10 @@ type Render struct {
 	MousePos ScreenPos
 
 	// текущая выбранная позиция на карте
-	SelectedMapPos pos.Pos
+	SelectedMapPos game.Pos
 }
 
-func (self *Render) mapPosToScreenPos(mapPos pos.Pos) ScreenPos {
+func (self *Render) mapPosToScreenPos(mapPos game.Pos) ScreenPos {
 	const ImageSize = 96
 	// TODO: 92??
 	screenPos := ScreenPos{
@@ -57,10 +58,10 @@ func (self *Render) mapPosToScreenPos(mapPos pos.Pos) ScreenPos {
 // PickTile принимает экранные координаты,
 // а возвращает соответствующую позицию на карте
 //
-func (self *Render) PickTile(MousePos ScreenPos) pos.Pos {
-	var closestMapPos pos.Pos
+func (self *Render) PickTile(MousePos ScreenPos) game.Pos {
+	var closestMapPos game.Pos
 	minimalDistance := 9000
-	self.Core.Gameboard.ForEachTilePos(func(position pos.Pos) {
+	self.Core.Gameboard.ForEachTilePos(func(position game.Pos) {
 		screenPos := self.mapPosToScreenPos(position)
 		if distance(MousePos, screenPos) < minimalDistance {
 			minimalDistance = distance(MousePos, screenPos)
@@ -79,7 +80,7 @@ func (self *Render) drawImageAt(image *sdl.Surface, position ScreenPos) {
 	self.screen.Blit(&rect, image, nil)
 }
 
-func (self *Render) drawUnitAt(image *sdl.Surface, position pos.Pos) {
+func (self *Render) drawUnitAt(image *sdl.Surface, position game.Pos) {
 	screenPos := self.mapPosToScreenPos(position)
 	// screenPos1 := screenPos.Add(ScreenPos{15, 15})
 	screenPos1 := screenPos
@@ -103,7 +104,7 @@ func (self *Render) drawUnitAt(image *sdl.Surface, position pos.Pos) {
 // Draw выполняет непосредственно отрисовку
 func (self *Render) Draw() {
 	self.screen.FillRect(nil, 0x000000)
-	self.Core.Gameboard.ForEachTilePos(func(position pos.Pos) {
+	self.Core.Gameboard.ForEachTilePos(func(position game.Pos) {
 		self.drawImageAt(self.imageTile,
 			self.mapPosToScreenPos(position))
 	})
@@ -139,7 +140,7 @@ func (self *Render) Resize(w, h int) {
 //
 // Принимает указатель на ядро.
 //
-func New(core *core.Core) *Render {
+func NewRender(core *game.Core) *Render {
 	initSDL()
 	self := Render{
 		Core:              core,

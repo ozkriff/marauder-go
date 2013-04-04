@@ -1,6 +1,6 @@
 // See LICENSE file for copyright and license details.
 
-package core_test
+package game_test
 
 import "testing"
 

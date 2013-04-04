@@ -2,24 +2,20 @@
 
 // Package path реализует путенахождение
 //
-package path
+package game
 
 import (
 	"fmt"
 	"log"
-	"my/marauder/core"
-	"my/marauder/dir"
-	"my/marauder/gameboard"
-	"my/marauder/pos"
-	`my/marauder/queue`
+	"my/marauder/queue"
 )
 
 // TODO: remove print funcs from here!
 // ----------------------------------------------------
 
 func PrintForEachTile(
-	m gameboard.Gameboard,
-	f func(*gameboard.Tile),
+	m Gameboard,
+	f func(*Tile),
 ) {
 	for y := range m.Tiles {
 		if y%2 == 0 {
@@ -32,8 +28,8 @@ func PrintForEachTile(
 	}
 }
 
-func PrintMapIsWalkable(m gameboard.Gameboard) {
-	PrintForEachTile(m, func(tile *gameboard.Tile) {
+func PrintMapIsWalkable(m Gameboard) {
+	PrintForEachTile(m, func(tile *Tile) {
 		if tile.IsWalkable {
 			fmt.Printf("..  ")
 		} else {
@@ -42,8 +38,8 @@ func PrintMapIsWalkable(m gameboard.Gameboard) {
 	})
 }
 
-func PrintMapCost(m gameboard.Gameboard) {
-	PrintForEachTile(m, func(tile *gameboard.Tile) {
+func PrintMapCost(m Gameboard) {
+	PrintForEachTile(m, func(tile *Tile) {
 		if tile.Cost == 200 {
 			fmt.Printf(".   ")
 		} else {
@@ -52,8 +48,8 @@ func PrintMapCost(m gameboard.Gameboard) {
 	})
 }
 
-func PrintPath(m gameboard.Gameboard) {
-	PrintForEachTile(m, func(tile *gameboard.Tile) {
+func PrintPath(m Gameboard) {
+	PrintForEachTile(m, func(tile *Tile) {
 		if tile.Visited {
 			fmt.Printf("[]  ")
 		} else {
@@ -68,9 +64,9 @@ var pathQueue = queue.Queue{}
 
 // If this is first(start) tile - no parent tile
 func getParentDir(
-	m *gameboard.Gameboard,
-	u *core.Unit,
-	p pos.Pos) dir.Dir {
+	m *Gameboard,
+	u *Unit,
+	p Pos) Dir {
 
 	tile := m.Tile(p)
 	if tile.Cost == 0 {
@@ -80,8 +76,8 @@ func getParentDir(
 }
 
 func getTileCost(
-	originalPos pos.Pos,
-	neighbourPos pos.Pos) int {
+	originalPos Pos,
+	neighbourPos Pos) int {
 
 	// int diff = Dir(t, nb).diff(getParentDir(u, t))
 	// int maxAP = u.type().actionPoints - 1
@@ -93,9 +89,9 @@ func getTileCost(
 }
 
 func processNeighbourPos(
-	m *gameboard.Gameboard,
-	originalPos pos.Pos,
-	neighbourPos pos.Pos,
+	m *Gameboard,
+	originalPos Pos,
+	neighbourPos Pos,
 ) {
 	t1 := m.Tile(originalPos)
 	t2 := m.Tile(neighbourPos)
@@ -114,7 +110,7 @@ func processNeighbourPos(
 
 		// update neighbour tile info
 		t2.Cost = newcost
-		parent, err := dir.GetDirFromPosToPos(
+		parent, err := GetDirFromPosToPos(
 			neighbourPos, originalPos)
 		if err != nil {
 			log.Fatal()
@@ -125,23 +121,23 @@ func processNeighbourPos(
 }
 
 func tryToPushNeighbours(
-	m *gameboard.Gameboard,
+	m *Gameboard,
 	// const Unit& u,
-	p pos.Pos,
+	p Pos,
 ) {
 	if !m.IsInboard(p) {
 		log.Fatalf("p(%#v) isn't inboard", p)
 	}
 	for i := 0; i < 6; i++ {
-		neighbourPos := dir.GetNeighbourPos(p, dir.Dir(i))
+		neighbourPos := GetNeighbourPos(p, Dir(i))
 		if m.IsInboard(neighbourPos) {
 			processNeighbourPos(m, p, neighbourPos)
 		}
 	}
 }
 
-func cleanMap(m *gameboard.Gameboard) {
-	m.ForEachTilePos(func(p pos.Pos) {
+func cleanMap(m *Gameboard) {
+	m.ForEachTilePos(func(p Pos) {
 		m.Tile(p).Cost = 200
 	})
 }
@@ -150,7 +146,7 @@ func cleanMap(m *gameboard.Gameboard) {
 //
 // Т.е. заполняет поле Cost в клетках.
 //
-func Fill(m *gameboard.Gameboard, startPos pos.Pos) {
+func Fill(m *Gameboard, startPos Pos) {
 	if !pathQueue.IsEmpty() {
 		log.Fatal("queue is not empty\n")
 	}
@@ -168,12 +164,12 @@ func Fill(m *gameboard.Gameboard, startPos pos.Pos) {
 
 	for !pathQueue.IsEmpty() {
 		// fmt.Printf("len: %d\n", pathQueue.Len())
-		p := pathQueue.Pop().(pos.Pos)
+		p := pathQueue.Pop().(Pos)
 		tryToPushNeighbours(m, p)
 	}
 }
 
-func GetPath(m *gameboard.Gameboard, target pos.Pos) []pos.Pos {
+func GetPath(m *Gameboard, target Pos) []Pos {
 	if !m.IsInboard(target) {
 		log.Fatalf("bad target position %#v", target)
 	}
@@ -181,11 +177,11 @@ func GetPath(m *gameboard.Gameboard, target pos.Pos) []pos.Pos {
 	p := target
 
 	// std::vector<V2i> path;
-	path := make([]pos.Pos, 0)
+	path := make([]Pos, 0)
 
 	for m.Tile(p).Cost != 0 {
 		path = append(path, p) // path.push_back(p);
-		p = dir.GetNeighbourPos(p, m.Tile(p).Parent)
+		p = GetNeighbourPos(p, m.Tile(p).Parent)
 		if !m.IsInboard(p) {
 			log.Fatalf("bad position %#v", p)
 		}
@@ -200,7 +196,7 @@ func GetPath(m *gameboard.Gameboard, target pos.Pos) []pos.Pos {
 	// reverse list
 	// std::reverse(path.begin(), path.end());
 	pathLen := len(path)
-	reversedPath := make([]pos.Pos, pathLen)
+	reversedPath := make([]Pos, pathLen)
 	for k, v := range path {
 		reversedPath[pathLen-1-k] = v
 	}

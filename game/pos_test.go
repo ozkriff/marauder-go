@@ -1,14 +1,14 @@
 // See LICENSE file for copyright and license details.
 
-package pos_test
+package game_test
 
 import (
-	"my/marauder/pos"
 	"testing"
+	"my/marauder/game"
 )
 
 func TestNew(t *testing.T) {
-	p := pos.New(0, 1)
+	p := game.Pos{X: 0, Y: 1}
 	if p.X != 0 {
 		t.Errorf("X != 0")
 	}
@@ -18,10 +18,10 @@ func TestNew(t *testing.T) {
 }
 
 func TestAdd(t *testing.T) {
-	v1 := pos.Pos{X: 1, Y: 2}
-	v2 := pos.Pos{X: 3, Y: 4}
+	v1 := game.Pos{X: 1, Y: 2}
+	v2 := game.Pos{X: 3, Y: 4}
 	real := v1.Add(v2)
-	expected := pos.Pos{X: 4, Y: 6}
+	expected := game.Pos{X: 4, Y: 6}
 	if real != expected {
 		t.Fail()
 	}

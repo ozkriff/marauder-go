@@ -5,12 +5,11 @@
 // Модуль direction реализует работу с направлениями 
 // в гексагональной сетке.
 //
-package dir
+package game
 
 import (
 	"errors"
 	"log"
-	"my/marauder/pos"
 )
 
 // Dir обозначает некоторое направления.
@@ -33,7 +32,7 @@ const (
 // dirToPosDiff это вспомогательная таблица
 // для преобразования из позиции в направление.
 //
-var dirToPosDiff = [2][6]pos.Pos{
+var dirToPosDiff = [2][6]Pos{
 	{
 		{1, -1},
 		{1, 0},
@@ -73,7 +72,7 @@ func (self Dir) Opposite() Dir {
 	return directionIndex
 }
 
-func getTableIndex(p pos.Pos) int {
+func getTableIndex(p Pos) int {
 	var isOddRow bool = (p.Y%2 == 1)
 	var subtableIndex int
 	if isOddRow {
@@ -85,7 +84,7 @@ func getTableIndex(p pos.Pos) int {
 }
 
 // GetNeighbourPos возвращает соседнюю позицию в определенном направлении.
-func GetNeighbourPos(p pos.Pos, i Dir) pos.Pos {
+func GetNeighbourPos(p Pos, i Dir) Pos {
 	subtableIndex := getTableIndex(p)
 	if i >= 6 {
 		log.Fatal("bad direction")
@@ -98,7 +97,7 @@ func GetNeighbourPos(p pos.Pos, i Dir) pos.Pos {
 // позиции и возвращает индекс направления.
 //
 func GetDirFromPosToPos(
-	a pos.Pos, b pos.Pos,
+	a Pos, b Pos,
 ) (Dir, error) {
 	if a.Distance(b) != 1 {
 		return 0, errors.New("distance != 1")

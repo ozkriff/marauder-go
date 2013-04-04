@@ -1,30 +1,28 @@
 // See LICENSE file for copyright and license details.
 
-package core
+package game
 
 import (
 	"fmt"
-	"my/marauder/gameboard"
-	"my/marauder/pos"
 )
 
 // Core - стержень всей игры! :)
 type Core struct {
-	Gameboard     *gameboard.Gameboard
+	Gameboard     *Gameboard
 	Units         map[int]*Unit
 	SelectedUnit  *Unit
 	unitIDCounter int
 }
 
-// New создает новую карту.
+// NewCore ...
 //
 // Принимает указатель на Gameboard.
 //
-func New(mapPtr *gameboard.Gameboard) *Core {
+func NewCore(mapPtr *Gameboard) *Core {
 	self := Core{
 		Units: map[int]*Unit{
-			0: &Unit{Pos: pos.New(1, 2)},
-			1: &Unit{Pos: pos.New(2, 2)},
+			0: &Unit{Pos: Pos{X: 1, Y: 2}},
+			1: &Unit{Pos: Pos{X: 2, Y: 2}},
 		},
 		Gameboard:     mapPtr,
 		unitIDCounter: 0,
@@ -33,7 +31,7 @@ func New(mapPtr *gameboard.Gameboard) *Core {
 }
 
 type NoUnitAtThisPosError struct {
-	Pos pos.Pos
+	Pos Pos
 }
 
 func (e NoUnitAtThisPosError) Error() string {
@@ -41,7 +39,7 @@ func (e NoUnitAtThisPosError) Error() string {
 }
 
 // UnitAt проверят, есть ли юнит по таким кординатам иили нет.
-func (self *Core) UnitAt(pos pos.Pos) (*Unit, error) {
+func (self *Core) UnitAt(pos Pos) (*Unit, error) {
 	for _, unit := range self.Units {
 		if unit.Pos == pos {
 			return unit, nil

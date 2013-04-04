@@ -6,15 +6,12 @@ package main
 
 import (
 	"fmt"
-	"my/marauder/core"
-	"my/marauder/gameboard"
-	"my/marauder/path"
-	"my/marauder/pos"
+	"my/marauder/game"
 	userInterface "my/marauder/ui"
 )
 
-func setSomeUnwalkableTiles(m *gameboard.Gameboard) {
-	coordinates := []pos.Pos{
+func setSomeUnwalkableTiles(m *game.Gameboard) {
+	coordinates := []game.Pos{
 		{X: 5, Y: 5},
 		{X: 4, Y: 6},
 		{X: 4, Y: 7},
@@ -37,21 +34,21 @@ func setSomeUnwalkableTiles(m *gameboard.Gameboard) {
 }
 
 func main() {
-	mapSize := pos.Pos{X: 10, Y: 20}
-	board := gameboard.New(mapSize)
+	mapSize := game.Pos{X: 10, Y: 20}
+	board := game.NewGameboard(mapSize)
 	setSomeUnwalkableTiles(board)
-	if true {
+	if false {
 		// тест путенахождения
-		path.Fill(board, pos.New(1, 2))
-		path.PrintMapIsWalkable(*board)
-		path.PrintMapCost(*board)
-		p := path.GetPath(board, pos.Pos{X: 9, Y: 9})
+		game.Fill(board, game.Pos{X: 1, Y: 2})
+		game.PrintMapIsWalkable(*board)
+		game.PrintMapCost(*board)
+		p := game.GetPath(board, game.Pos{X: 9, Y: 9})
 		fmt.Printf("%v\n", p)
-		path.PrintPath(*board)
+		game.PrintPath(*board)
 	} else {
 		// нормальная игра
-		core := core.New(board)
-		ui := userInterface.New(core)
+		core := game.NewCore(board)
+		ui := userInterface.NewUserInterface(core)
 		ui.Run()
 		ui.Close()
 	}

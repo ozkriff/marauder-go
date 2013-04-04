@@ -1,6 +1,6 @@
 // See LICENSE file for copyright and license details.
 
-package render
+package ui
 
 import (
 	"github.com/banthar/Go-SDL/sdl"

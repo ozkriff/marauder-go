@@ -1,15 +1,11 @@
 // See LICENSE file for copyright and license details.
 
 // Package pos - позиция на карте.
-package pos
+package game
 
 type Pos struct {
 	X int
 	Y int
-}
-
-func New(x, y int) Pos {
-	return Pos{X: x, Y: y}
 }
 
 // Add one vector to another

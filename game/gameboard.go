@@ -1,26 +1,21 @@
 // See LICENSE file for copyright and license details.
 
-package gameboard
-
-import (
-	"my/marauder/dir"
-	"my/marauder/pos"
-)
+package game
 
 type Tile struct {
 	Cost       int
 	IsWalkable bool
-	Parent     dir.Dir
+	Parent     Dir
 	Visited    bool
 }
 
 type Gameboard struct {
-	Size  pos.Pos
+	Size  Pos
 	Tiles [][]Tile
 }
 
 // New создает новый экземпляр карты с заданным размером
-func New(size pos.Pos) *Gameboard {
+func NewGameboard(size Pos) *Gameboard {
 	self := Gameboard{
 		Size: size,
 	}
@@ -37,11 +32,11 @@ func New(size pos.Pos) *Gameboard {
 	return &self
 }
 
-func (self *Gameboard) Tile(p pos.Pos) *Tile {
+func (self *Gameboard) Tile(p Pos) *Tile {
 	return &self.Tiles[p.Y][p.X]
 }
 
-func (self *Gameboard) IsInboard(p pos.Pos) bool {
+func (self *Gameboard) IsInboard(p Pos) bool {
 	return p.X >= 0 &&
 		p.X < self.Size.X &&
 		p.Y >= 0 &&
@@ -50,10 +45,10 @@ func (self *Gameboard) IsInboard(p pos.Pos) bool {
 
 // ForEachTilePos выполняет некую функцию для каждой клетки,
 // передавая ее координаты в функцию.
-func (self *Gameboard) ForEachTilePos(f func(position pos.Pos)) {
+func (self *Gameboard) ForEachTilePos(f func(position Pos)) {
 	for y := 0; y < self.Size.Y; y++ {
 		for x := 0; x < self.Size.X; x++ {
-			f(pos.New(x, y))
+			f(Pos{X: x, Y: y})
 		}
 	}
 }

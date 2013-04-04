@@ -4,26 +4,24 @@ package ui
 
 import (
 	"github.com/banthar/Go-SDL/sdl"
-	"my/marauder/core"
-	"my/marauder/input"
-	"my/marauder/render"
+	"my/marauder/game"
 )
 
 // UserInterface позволяет рисовать происходящее в игре
 // и получать ввод от пользователя
 //
 type UserInterface struct {
-	renderer     *render.Render
-	inputHandler *input.InputHandler
+	renderer     *Render
+	inputHandler *InputHandler
 }
 
 // New это конструктор
 //
-// Принимает указатель на core.Core, т.к. надо же чего-то отображать.
+// Принимает указатель на game.Core, т.к. надо же чего-то отображать.
 //
-func New(core *core.Core) *UserInterface {
-	renderer := render.New(core)
-	inputHandler := input.New(renderer, core)
+func NewUserInterface(core *game.Core) *UserInterface {
+	renderer := NewRender(core)
+	inputHandler := NewInputHandler(renderer, core)
 	self := &UserInterface{
 		renderer:     renderer,
 		inputHandler: inputHandler,
