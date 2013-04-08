@@ -1,6 +1,6 @@
 // See LICENSE file for copyright and license details.
 
-// Package queue implements extremle inefficiemnt queue.
+// Package queue implements extremely inefficiemnt queue.
 //
 package queue
 
